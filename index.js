@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
-const {Circle, Square, Triangle} = require("./lib/shapes.js")
+const {shapesCircle, shapesSquare, shapesTriangle} = require("./lib/shapes.js")
 
 // console.log("Circle:", Circle);
 // console.log("Square:", Square);
@@ -12,13 +12,18 @@ class Shapes {
         this.shape = ''
     }
     render(){
-    return `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="300" height="200">`
+        return `
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="300" height="200">
+                ${this.shape}
+                ${this.text}
+            </svg>
+        `;
     }
     createText(text,color){
         this.text = `<text x="150" y="125" font-size="60" text-anchor="middle" fill="${color}">${text}</>`
     }
     createShape(shape){
-        this.shape = shape.render()
+        this.shape = shape;
     }
 }
 
@@ -30,12 +35,12 @@ const questions = [
      },
      {
         type: 'input',
-        name: 'initial-color',
+        name: 'initialColor',
         message: 'Please enter your preferred initial color',
      },
      {
         type: 'input',
-        name: 'shape-color',
+        name: 'shapeColor',
         message: 'Please enter your preferred shape color.',
      },
     {
@@ -47,38 +52,38 @@ const questions = [
 ]
 
 function generateSVG(data) {
-    const shapeObj = {
-      Circle,
-      Square,
-      Triangle,
+    const shapeFunctions = {
+      Circle: shapesCircle,
+      Square: shapesSquare,
+      Triangle: shapesTriangle,
     };
   
-    const selectedShape = shapeObj[data.shape];
+    const selectedShapeFunction = shapeFunctions[data.shape];
+  
+    if (!selectedShapeFunction) {
+      console.error('Invalid shape selected.');
+      return '';
+    }
+  
+    const svgShape = selectedShapeFunction(data.shapeColor);
   
     const shape = new Shapes();
     shape.createText(data.initials, data.initialColor);
-    shape.createShape(selectedShape);
+    shape.createShape(svgShape);
   
     return shape.render();
   }
   
   function writeToFile(svgTemplate) {
     fs.writeFileSync('logo.svg', svgTemplate);
-    console.log('logo.svg created successfully!');
+    console.log('Generated logo.svg');
   }
-
-function init() {
-    inquirer.prompt(questions)
-    // .then(function(data))
-    .then((data) => {
-        // console.log(data);
-        const template = generateSVG(data)
-        console.log(template);
-        writeToFile(template)
-
-    }) 
-}
-
-
-
-init();
+  
+  function init() {
+    inquirer.prompt(questions).then((data) => {
+      const template = generateSVG(data);
+      writeToFile(template);
+    });
+  }
+  
+  init();
