@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
-const {shapesCircle, shapesSquare, shapesTriangle} = require("./lib/shapes.js")
+const { Circle } = require("./lib/shapes.js")
 
 // console.log("Circle:", Circle);
 // console.log("Square:", Square);
@@ -14,8 +14,8 @@ class Shapes {
     render(){
         return `
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="300" height="200">
-                ${this.shape}
-                ${this.text}
+            ${this.shape}
+            ${this.text}
             </svg>
         `;
     }
@@ -52,26 +52,28 @@ const questions = [
 ]
 
 function generateSVG(data) {
-    const shapeFunctions = {
-      Circle: shapesCircle,
-      Square: shapesSquare,
-      Triangle: shapesTriangle,
-    };
+    // const shapeFunctions = {
+    //   Circle: shapesCircle,
+    //   Square: shapesSquare,
+    //   Triangle: shapesTriangle,
+    // };
   
-    const selectedShapeFunction = shapeFunctions[data.shape];
+    // const selectedShapeFunction = shapeFunctions[data.shape];
   
-    if (!selectedShapeFunction) {
-      console.error('Invalid shape selected.');
-      return '';
-    }
+    // if (!selectedShapeFunction) {
+    //   console.error('Invalid shape selected.');
+    //   return '';
+    // }
   
-    const svgShape = selectedShapeFunction(data.shapeColor);
+    let svgShape; 
+    svgShape = new Circle();
+    console.log(svgShape);
   
-    const shape = new Shapes();
-    shape.createText(data.initials, data.initialColor);
-    shape.createShape(svgShape);
+    // const shape = new Shapes();
+    // shape.createText(data.initials, data.initialColor);
+    // shape.createShape(svgShape);
   
-    return shape.render();
+    // return shape.render();
   }
   
   function writeToFile(svgTemplate) {
@@ -81,8 +83,16 @@ function generateSVG(data) {
   
   function init() {
     inquirer.prompt(questions).then((data) => {
-      const template = generateSVG(data);
-      writeToFile(template);
+        let svgShape; 
+        svgShape = new Circle("WAC", "BLUE", "WHITE");
+        //Make an if statement that revalutes this depending on what the user asks for
+        const svg = svgShape.render();
+        console.log(svg);
+
+
+
+    //   const template = generateSVG(data);
+      writeToFile(svg);
     });
   }
   
