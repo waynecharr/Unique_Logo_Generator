@@ -32,6 +32,7 @@ The logo will either be in the shape of a Circle, a Square, or a Triangle.
 - "finished running tests for circle, square, and triangle. All run successfully."
 - "updated the dimensions of some of the shapes, updated the test conditions to pass, and added example logos to the examples folder"
 - "updated README with table of contents and sections for Installation, Instructions, and a video tutorial"
+- "added nodes to code in the index.js, shapes.js, and shapes.test.js files"
 
 # Contributing
 
